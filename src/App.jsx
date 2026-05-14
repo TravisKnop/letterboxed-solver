@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import LetterBox from './components/LetterBox'
 import WordList from './components/WordList'
+import ExcludeLetters from './components/ExcludeLetters'
 import { filterWords } from './utils/wordFilter'
 import './App.css'
 
@@ -11,6 +12,7 @@ export default function App() {
   const [wordList, setWordList] = useState([])
   const [loading, setLoading] = useState(true)
   const [showList, setShowList] = useState(false)
+  const [excluded, setExcluded] = useState([])
 
   useEffect(() => {
     fetch('/enable.txt')
@@ -21,10 +23,11 @@ export default function App() {
       })
   }, [])
 
-  const validWords = loading ? [] : filterWords(sides, wordList)
+  const validWords = loading ? [] : filterWords(sides, wordList, excluded)
 
   function handleClear() {
     setSides(EMPTY_SIDES)
+    setExcluded([])
     setShowList(false)
   }
 
@@ -41,6 +44,8 @@ export default function App() {
       </div>
 
       <LetterBox sides={sides} setSides={setSides} />
+
+      <ExcludeLetters excluded={excluded} setExcluded={setExcluded} />
 
       <div className="controls">
         <button

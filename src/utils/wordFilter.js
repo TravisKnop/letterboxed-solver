@@ -1,4 +1,4 @@
-export function filterWords(sides, wordList) {
+export function filterWords(sides, wordList, excluded = []) {
   const letterSide = {}
   for (const [side, letters] of Object.entries(sides)) {
     for (const letter of letters) {
@@ -11,8 +11,13 @@ export function filterWords(sides, wordList) {
 
   const allFilled = entered.size === 12
 
+  const excludedSet = new Set(excluded)
+
   return wordList.filter(word => {
     if (word.length < 3) return false
+    for (const ch of word) {
+      if (excludedSet.has(ch)) return false
+    }
 
     if (allFilled) {
       // Full board: word may only use the 12 entered letters
